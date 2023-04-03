@@ -9,7 +9,8 @@ using namespace std;
 
 //実行ではmpirunですること
 int main(int argc, char **argv)
-{
+{   
+    bool ISdebug = true;
     int n = 16; // ベクトルの要素数
     int *a, *b; // ベクトルaとb
     int partial_sum = 0.0; // 各プロセスの部分和
@@ -34,12 +35,12 @@ int main(int argc, char **argv)
         }
 
         //初期値の出力
-        if(true){
+        if(ISdebug){
             cout << "a : [ ";
             for(int i=0;i<n;i++){
                 cout << a[i] << ", ";
             }
-            cout << "]" << endl << "b : [";
+            cout << "]" << endl << "b : [ ";
             for(int i=0;i<n;i++){
                 cout << b[i] << ", ";
             }
@@ -58,9 +59,19 @@ int main(int argc, char **argv)
     MPI_Scatter(a, partialSize, MPI_INT, local_a, partialSize, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Scatter(b, partialSize, MPI_INT, local_b, partialSize, MPI_INT, 0, MPI_COMM_WORLD);
 
+    //各プロセスに割り当てられた配列
+    if(ISdebug==true){
+        string text = "myrannk : " + to_string(myrank) + ", array [ ";
+        for(int i=0;i<partialSize;i++){
+            text += to_string(local_a[i]) + ", ";
+        }
+        text += "]\n";
+        cout << text;
+    }
+
     //各プロセスに割り当てられた内積を計算
     for(int i=0;i<partialSize;i++){
-        partial_sum += local_a[i] + local_b[i];
+        partial_sum += local_a[i] * local_b[i];
     }
     
     //プロセス0に集約
