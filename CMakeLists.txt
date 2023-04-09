@@ -6,7 +6,7 @@ project(Nparticle)
 
 include_directories(include)
 
-add_executable(excute src/add_vector.cpp)
+add_executable(excute src/2D_vector.cpp)
 
 
 find_package(MPI REQUIRED)
