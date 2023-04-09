@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     int myrank;
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
     
-    int N = 10;
+    int N = 12;
     int M = 5;
     int **A;
     int *A_1D;
@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
     //--ここですべてのプロセスが終わるのを待つ
     MPI_Barrier(MPI_COMM_WORLD);
 
-
+    //Bcastで配列を送る
     MPI_Bcast(&B[0],N,MPI_INT,0,MPI_COMM_WORLD);
     MPI_Bcast(&A_1D[0],N*M,MPI_INT,0,MPI_COMM_WORLD);
     conv1to2(N,M,A_1D,A);
